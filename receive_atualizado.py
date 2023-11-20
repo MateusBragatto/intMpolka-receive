@@ -72,9 +72,13 @@ def getFields(pkt):
 
 def handle_pkt(pkt):
   fields_value = getFields(pkt)
-  print("oie")
+  #int_header_layer = pkt[SourceRoute][IntHeader]
+  #print(int_header_layer.remaining_hop_count)
+  print("teste")
   print(fields_value)
   #logInt(fields_value)
+
+
   pkt.show2()
 
 def main():
@@ -88,18 +92,18 @@ def main():
       #file.write(str(header) + '\n')
   #mudei
   #iface = 'enp0s8'
-  iface = 's3-eth1'
-  bind_layers(Ether, IP, type = 0x2020)
-  bind_layers(IP, ICMP, proto = 1)
-  bind_layers(ICMP, SourceRoute)
-  bind_layers(SourceRoute, IntHeader, code = 118)
-  bind_layers(IntHeader, IntData)
+  iface = 'e2-eth1'
+  # bind_layers(Ether, IP, type = 0x2020)
+  # bind_layers(IP, ICMP, proto = 1)
+  # bind_layers(ICMP, SourceRoute)
+  # bind_layers(SourceRoute, IntHeader, code = 118)
+  # bind_layers(IntHeader, IntData)
+  # bind_layers(IntData, IntData)
+  bind_layers(Ether, SourceRoute)
+  bind_layers(SourceRoute, IntHeader)
+  bind_layers(IntHeader,IntData)
   bind_layers(IntData, IntData)
-    #bind_layers(Ether, SourceRoute, type=0x2020) #0x2020 = 8224, do tipo srcroute no ethernet
-    #bind_layers(SourceRoute, IntHeader)
-    #bind_layers(IntHeader,IntData)
-    #bind_layers(IntData, IntData)
-    #bind_layers(IntData, IP)
+  bind_layers(IntData, IP)
   #bind_layers(IP, nodeCount, proto = 8224)
   print("oi")
   sniff(iface = iface, prn = lambda x: handle_pkt(x), filter = "ether proto 0x2020")
